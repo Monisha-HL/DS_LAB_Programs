@@ -1,0 +1,79 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node {
+    int value;
+    struct node *next;
+};
+
+typedef struct node *NODE;
+
+NODE getnode() {
+    NODE ptr;
+    ptr = (NODE) malloc(sizeof(struct node));
+    if (ptr == NULL) {
+        printf("Memory not allocated \n");
+        return NULL;
+    }
+    return ptr;
+}
+NODE insert_beg(int item, NODE first) {
+    NODE new_node = getnode();
+    new_node->value = item;
+    new_node->next = first;
+    return new_node;
+}
+
+NODE delete_first(NODE first)
+{
+    NODE temp;
+    if (first==NULL){
+        printf("Linked list is empty\n");
+        return NULL;
+    }
+    temp=first;
+    first=first->next;
+    free(temp);
+    return first;
+}
+
+void display(NODE first) {
+    NODE temp;
+    if (first == NULL) {
+        printf("Linked list is empty\n");
+        return;
+    }
+    temp = first;
+    while (temp != NULL) {
+        printf("%d ", temp->value);
+        temp = temp->next;
+    }
+    printf("\n");
+}
+
+int main()
+{
+    NODE first=NULL;
+    int ch, item;
+    while (1){
+    printf("1. insert_beg 2. delete_first 3. display \n");
+    printf("Enter a choice: \n");
+    scanf("%d", &ch);
+        switch(ch){
+            case 1: printf("Enter the item to insert: \n");
+                    scanf("%d", &item);
+                    first = insert_beg(item, first);
+                    break;
+
+            case 2: first = delete_first(first);
+                    display(first);
+                    break;
+
+            case 3: display(first);
+                    break;
+
+            default: printf("Invalid choice!\n");
+                     exit(0);
+        }
+    }
+}
