@@ -1,0 +1,154 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node {
+    int value;
+    struct node *next;
+};
+
+typedef struct node *NODE;
+
+NODE getnode() {
+    NODE ptr;
+    ptr = (NODE) malloc(sizeof(struct node));
+    if (ptr == NULL) {
+        printf("Memory not allocated \n");
+        return NULL;
+    }
+    return ptr;
+}
+NODE insert_beg(int item, NODE first) {
+    NODE new_node = getnode();
+    new_node->value = item;
+    new_node->next = first;
+    return new_node;
+}
+
+NODE insert_end(int item, NODE first) {
+    NODE new_end = getnode();
+    new_end->value = item;
+    new_end->next = NULL;
+    if (first == NULL) {
+        return new_end;
+    }
+    NODE current = first;
+    while (current->next != NULL) {
+        current = current->next;
+    }
+    current->next = new_end;
+    return first;
+}
+
+void display(NODE first) {
+    NODE temp;
+    if (first == NULL) {
+        printf("Linked list is empty\n");
+        return;
+    }
+    temp = first;
+    while (temp != NULL) {
+        printf("%d ", temp->value);
+        temp = temp->next;
+    }
+    printf("\n");
+}
+
+void sort(NODE first)
+{
+    int x;
+    NODE temp1, temp2;
+    temp1=first;
+    temp2=first->next;
+    while(temp1!=NULL && temp1->next!=NULL){
+        temp2=temp1->next;
+        while (temp2!=NULL){
+            if (temp1->value>temp2->value){
+                x=temp1->value;
+                temp1->value=temp2->value;
+                temp2->value=x;
+            }
+            temp2=temp2->next;
+        }
+        temp1=temp1->next;
+    }
+}
+
+NODE concatenate(NODE first, NODE second)
+{
+    NODE last;
+    last=first;
+    if(first==NULL && second==NULL){
+        return NULL;
+    }
+    if (first==NULL){
+        return second;
+    }
+    if (second==NULL){
+        return first;
+    }
+    while(last->next!=NULL){
+        last=last->next;
+    }
+    last->next=second;
+    return first;
+}
+
+NODE reverse(NODE first)
+{
+    NODE current, temp;
+    current=NULL;
+    while(first!=NULL){
+        temp=first;
+        first=first->next;
+        temp->next=current;
+        current=temp;
+    }
+    return current;
+}
+
+int main()
+{
+    NODE first=NULL;
+    int ch, item;
+    NODE second=NULL;
+    second= insert_end(10, second);
+    second= insert_end(12, second);
+    second= insert_end(14, second);
+    while (1){
+    printf("1. insert_beg 2. insert_end 3. display 4. sort 5. concatenate 6. reverse\n");
+    printf("Enter a choice: \n");
+    scanf("%d", &ch);
+        switch(ch){
+            case 1: printf("Enter the item to insert: \n");
+                    scanf("%d", &item);
+                    first = insert_beg(item, first);
+                    break;
+
+            case 2: printf("Enter the item to insert: \n");
+                    scanf("%d", &item);
+                    first = insert_end(item, first);
+                    break;
+
+            case 3: display(first);
+                    break;
+
+            case 4: sort(first);
+                    display(first);
+                    break;
+
+            case 5: printf("Elements in second linked list are:\n");
+                    display(second);
+                    concatenate(first, second);
+                    display(first);
+                    break;
+
+            case 6: first = reverse(first);
+                    display(first);
+                    break;
+
+            default: printf("Invalid choice!\n");
+                     exit(0);
+
+        }
+    }
+}
