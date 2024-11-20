@@ -1,0 +1,154 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node
+{
+    int value;
+    struct node *next;
+    struct node *prev;
+};
+typedef struct node *NODE;
+
+NODE getnode() {
+    NODE ptr;
+    ptr = (NODE) malloc(sizeof(struct node));
+    if (ptr == NULL) {
+        printf("Memory not allocated \n");
+        return NULL;
+    }
+    return ptr;
+}
+
+NODE insert_end(int item, NODE first) {
+    NODE new_end = getnode();
+    new_end->value = item;
+    new_end->next = NULL;
+    if (first == NULL) {
+        return new_end;
+    }
+    NODE current = first;
+    while (current->next != NULL) {
+        current = current->next;
+    }
+    current->next = new_end;
+    return first;
+}
+
+NODE insert_left_value(NODE first, int item, int key)
+{
+    NODE new_node, current;
+    new_node=getnode();
+    new_node->value=item;
+    new_node->next=NULL;
+    new_node->prev=NULL;
+    if (first==NULL)
+    {
+        return new_node;
+    }
+    current =first;
+    while (current != NULL && current->value != key)
+    {
+        current = current->next;
+    } if (current != NULL && current->value == key)
+    {
+        new_node->next = current;
+        new_node->prev = current->prev;
+        if (current->prev != NULL)
+        {
+            current->prev->next = new_node;
+        }
+        else
+        {
+            first = new_node;
+        }
+        current->prev = new_node;
+
+    }
+    else
+    {
+        printf("Value not found\n");
+        free(new_node);
+    }
+    return first;
+}
+
+NODE delete_value(NODE first, int key)
+{
+    NODE current;
+    if (first==NULL)
+    {
+        printf("Linked list empty\n");
+        return NULL;
+    }
+    current=first;
+    while(current!=NULL && current->value!=key)
+    {
+        current=current->next;
+    }
+    if (current->value==key)
+    {
+        current->prev->next=current->next;
+        current->next->prev=current->prev;
+        free(current);
+        return first;
+    }
+    else
+    {
+        printf("Value not found\n");
+        return first;
+    }
+}
+
+NODE display(NODE first)
+{
+    NODE temp;
+    if (first==NULL)
+    {
+        printf("Linked list is empty\n");
+        return NULL;
+    }
+    temp=first;
+    while(temp!=NULL)
+    {
+        printf("%d", temp->value);
+        temp=temp->next;
+    }
+    printf("\n");
+}
+
+int main()
+{
+    NODE first=NULL;
+    int ch, item, key;
+    while (1){
+    printf("1. insert_end 2. insert_left_value 3. delete_value 4. Display\n");
+    printf("Enter a choice: \n");
+    scanf("%d", &ch);
+        switch(ch)
+        {
+            case 1: printf("Enter element to be inserted at end:\n");
+                    scanf("%d", &item);
+                    first= insert_end(item, first);
+                    break;
+
+            case 2: printf("Enter the value to be inserted:\n");
+                    scanf("%d", &item);
+                    printf("Enter the value to be inserted to the left:\n");
+                    scanf("%d", &key);
+                    first= insert_left_value(first, item, key);
+                    break;
+
+            case 3: printf("Enter the value to be deleted: \n");
+                    scanf("%d", &key);
+                    first= delete_value(first, key);
+                    break;
+
+            case 4: printf("Linked list elements are: \n");
+                    display(first);
+                    break;
+
+            default: printf("Invalid choice!\n");
+                     exit(0);
+        }
+    }
+}
