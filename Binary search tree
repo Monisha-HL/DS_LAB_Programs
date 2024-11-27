@@ -1,0 +1,90 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct BST {
+    int data;
+    struct BST *left;
+    struct BST *right;
+} node;
+
+node* create(int data) {
+    node *temp = (node*)malloc(sizeof(node));
+    temp->data = data;
+    temp->left = NULL;
+    temp->right = NULL;
+    return temp;
+}
+
+node* insert_node(node *root, node *temp) {
+    if (root == NULL) {
+        return temp;
+    }
+    if (temp->data < root->data) {
+        root->left = insert_node(root->left, temp);
+    } else {
+        root->right = insert_node(root->right, temp);
+    }
+    return root;
+}
+
+void preorder(node *root) {
+    if (root != NULL) {
+        printf("%d ", root->data);
+        preorder(root->left);
+        preorder(root->right);
+    }
+}
+
+void inorder(node *root) {
+    if (root != NULL) {
+        inorder(root->left);
+        printf("%d ", root->data);
+        inorder(root->right);
+    }
+}
+
+void postorder(node *root) {
+    if (root != NULL) {
+        postorder(root->left);
+        postorder(root->right);
+        printf("%d ", root->data);
+    }
+}
+
+void display(node *root) {
+    printf("PreOrder Traversal:\n");
+    preorder(root);
+    printf("\nInOrder Traversal:\n");
+    inorder(root);
+    printf("\nPostOrder Traversal:\n");
+    postorder(root);
+    printf("\n");
+}
+
+int main() {
+    node *root = NULL;
+    int ch, data;
+    while(1){
+        printf("1. insert 2. display 3. exit\n");
+        printf("Enter the choice: ");
+        scanf("%d", &ch);
+        switch(ch)
+        {
+            case 1: printf("Enter the data to be inserted:\n");
+                    scanf("%d", &data);
+                    root = insert_node(root, create(data));
+                    break;
+
+            case 2: printf("The elements in BST are:\n");
+                    display(root);
+                    break;
+
+            case 3: exit(0);
+
+            default: printf("Invalid choice:\n");
+                     exit(0);
+        }
+    }
+}
+
+
